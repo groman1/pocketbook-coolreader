@@ -96,7 +96,7 @@ public:
 };
 
 CRLinksDialog::CRLinksDialog( CRGUIWindowManager * wm, CRViewDialog * docwin, bool backPreffered )
-: CRGUIWindowBase( wm ), _docwin(docwin), _docview(docwin->getDocView()), _toolBar(NULL)
+: CRGUIWindowBase( wm ), _docwin(docwin), _docview(docwin->getDocView())
 {
     setSkinName( L"#links-dialog");
     _invalidateRect.left = 0;
@@ -106,7 +106,7 @@ CRLinksDialog::CRLinksDialog( CRGUIWindowManager * wm, CRViewDialog * docwin, bo
     CRToolBarSkinRef tb1Skin;
     CRToolBarSkinRef tb2Skin;
     CRWindowSkinRef windowSkin = getSkin();
-    if ( !windowSkin.isNull() ) {
+    /*if ( !windowSkin.isNull() ) {
         tb1Skin = windowSkin->getToolBar1Skin();
         tb2Skin = windowSkin->getToolBar2Skin();
     }
@@ -123,7 +123,8 @@ CRLinksDialog::CRLinksDialog( CRGUIWindowManager * wm, CRViewDialog * docwin, bo
             // can't switch toolbar position
             _toolBar->setEnabled(_toolBar->findButton(MCMD_SWAP, 0), false);
         }
-    }
+    }*/
+	_toolBar = NULL;
     _curPage = -1;
     _fullscreen = true;
     _onTop= true;
@@ -147,12 +148,15 @@ bool CRLinksDialog::onCommand( int command, int params )
                 _wm->postCommand( button->getCommand(), button->getParam());
             return false;
         } else if ( _docview->goSelectedLink() ) {
-            activate( true );
+			_docview->clearSelection();
+            //activate( true );
+			_wm->closeWindow( this );
         }
         return true;
     case DCMD_LINK_BACK:
-        if (_docview->goBack())
-            activate(_docview->canGoBack());
+		_docview->clearSelection();
+        _docview->goBack();
+        _wm->closeWindow( this );
         break;
     case MCMD_LONG_BACK:
         _docview->clearSelection();
@@ -222,7 +226,6 @@ bool CRLinksDialog::onCommand( int command, int params )
                 _toolBar->setSkin(windowSkin->getToolBar1Skin());
             else
                 _toolBar->setSkin(windowSkin->getToolBar2Skin());
-
         }
         break;
     default:
@@ -342,12 +345,11 @@ bool CRLinksDialog::activate(bool backPreffered)
             _toolBar->setEnabled( _backIndex, ( _backSize!=0 ) );
             _toolBar->setEnabled( _forwardIndex, ( _fwdSize!=0 ) );
         }
-        if ( (_linkCount > 0 && !backPreffered) || NULL == _toolBar ) {
-            if (NULL != _toolBar)
+        if ( (_linkCount > 0 && !backPreffered) ) {
+        	if (NULL != _toolBar)
                 _toolBar->setActive(false);
             _docview->selectFirstPageLink();
-        } else
-            _toolBar->selectFirstButton();
+        }
         invalidateControls();
     }
     if (needUpdate) {

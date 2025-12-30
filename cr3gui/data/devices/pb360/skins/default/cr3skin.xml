@@ -8,19 +8,6 @@
     <button normal="cite_grow_phrase.png" selected="cite_grow_phrase_sel.png"/>
     <button normal="cite_shrink_phrase.png" selected="cite_shrink_phrase_sel.png"/>
   </toolbar>
-  <toolbar id="links-toolbar-up" size="160,42" pos="0,0">
-    <border widths="16,4,4,4"/>
-    <background color="#FFFFFF"/>
-    <button normal="arrow_left_black.png" disabled="arrow_left_white.png" selected="arrow_left_black_sel.png"/>
-    <button normal="arrow_right_black.png" disabled="arrow_right_white.png" selected="arrow_right_black_sel.png"/>
-    <button normal="toolbar_move_down.png" selected="toolbar_move_down_sel.png"/>
-    <button normal="links_cancel.png" selected="links_cancel_sel.png"/>
-  </toolbar>
-  <toolbar id="links-toolbar-down" base="#links-toolbar-up" pos="0,-42">
-    <override item="3">
-	<button normal="toolbar_move_up.png" selected="toolbar_move_up_sel.png"/>
-    </override>
-  </toolbar>
   <scroll id="titlescroll" autohide="true" show-page-numbers="true" location="title"
       pos="-120,0" size="130, 100%" halign="right" valign="center">
       <size minvalue="20,30" maxvalue="0,0"/>
@@ -125,8 +112,6 @@
   <window id="cite-dialog-rotated" base="#cite-dialog"/>
 
   <window id="links-dialog" base="#dialog">
-    <toolbar1 base="#links-toolbar-up"/>
-    <toolbar2 base="#links-toolbar-down"/>
   </window>
   <window id="links-dialog-rotated" base="#links-dialog"/>
 
@@ -135,16 +120,14 @@
             <size minvalue="0,40" maxvalue="100%,40"/>
             <text color="#000000" face="Arial Unicode MS, DejaVu Sans,  Liberation Sans" size="24" bold="false" italic="false" valign="center" halign="left"/>
             <background color="#FFFFFF"/>
-            <background color="#000000" pos="0, 0" size="100%,2"/>
-            <background color="#000000" pos="0,-2" size="100%,2"/>
             <background color="#000000" pos="0,0" size="2,100%"/> 
             <background color="#000000" pos="-2,0" size="2,100%"/> 
-            <border widths="4,4,4,4"/>
+            <border widths="0,0,0,0"/>
 		</title>
         <text color="#000000" face="Arial Unicode MS, DejaVu Sans, Liberation Sans" size="20" bold="true" italic="false" valign="center" halign="center"/>
         <client>
             <background color="#FFFFFF"/>
-            <border widths="8,8,8,8"/>
+            <border widths="0,0,0,0"/>
             <text color="#000000" face="Arial Unicode MS, DejaVu Sans, Liberation Sans" size="20" bold="false" italic="false" valign="center" halign="center"/>
         </client>
         <status>
@@ -160,11 +143,9 @@
             <size minvalue="0,40" maxvalue="100%,40"/>
             <text color="#000000" face="DejaVu Sans Condensed, Arial Unicode MS, Liberation Sans" size="24" bold="false" italic="false" valign="center" halign="left"/>
             <background color="#FFFFFF"/>
-            <background color="#000000" pos="0, 0" size="100%,2"/>
-            <background color="#000000" pos="0,-2" size="100%,2"/>
             <background color="#000000" pos="0,0" size="2,100%"/> 
             <background color="#000000" pos="-2,0" size="2,100%"/> 
-            <border widths="4,4,4,4"/>
+            <border widths="0,0,0,0"/>
 		</title>
         <text color="#000000" face="Arial Unicode MS, DejaVu Sans, Liberation Sans" size="22" bold="true" italic="false" valign="center" halign="left"/>
         <background color="#FFFFFF"/>

@@ -36,11 +36,9 @@
 
 #define PB_DICT_SELECT 0
 #define PB_DICT_EXIT 1
-#define PB_DICT_GOOGLE 2
-#define PB_DICT_WIKIPEDIA 3
-#define PB_DICT_ARTICLE_LIST 4
-#define PB_DICT_DEACTIVATE 5
-#define PB_DICT_SEARCH 6
+#define PB_DICT_ARTICLE_LIST 2
+#define PB_DICT_DEACTIVATE 3
+#define PB_DICT_SEARCH 4
 
 #define PB_LINE_HEIGHT 30
 
@@ -1621,7 +1619,6 @@ private:
     void loadDictionaries();
 protected:
     virtual void selectDictionary();
-    virtual void launchDictBrowser(const char *urlBase);
     virtual void onDictionarySelect();
     virtual bool onItemSelect();
 public:
@@ -3107,7 +3104,7 @@ static void paused_rotate_timer()
 
 CRPbDictionaryView::CRPbDictionaryView(CRGUIWindowManager * wm, CRPbDictionaryDialog *parent)
     : CRViewDialog(wm, lString16::empty_str, lString8::empty_str, lvRect(), false, true), _parent(parent),
-    _dictsTable(16), _active(false), _dictsLoaded(false), _itemsCount(7), _translateResult(0),
+    _dictsTable(16), _active(false), _dictsLoaded(false), _itemsCount(5), _translateResult(0),
     _newWord(NULL), _newTranslation(NULL)
 {
     bool default_dict = false;
@@ -3242,6 +3239,7 @@ void CRPbDictionaryView::drawTitleBar()
     {
         lvRect selRc;
 
+		// selected index 0 is the dict selection (titleRc)
         if (_selectedIndex != 0 && tbWidth > 0) {
             int itemWidth = tbWidth/(_itemsCount -1);
             selRc = titleRc;
@@ -3371,23 +3369,6 @@ void CRPbDictionaryView::searchDictionary()
     OpenCustomKeyboard(DICKEYBOARD, const_cast<char *>("@Search"), key_buffer, KEY_BUFFER_LEN, 0, searchHandler);
 }
 
-void CRPbDictionaryView::launchDictBrowser(const char *urlBase) {
-    lString16 lang = main_win->getBookLanguage();
-    CRLog::trace("launchDictBrowser(): main_win->getBookLanguage() = %s", UnicodeToUtf8(lang).c_str());
-    if( lang.empty() ) {
-        lang = currentLang;
-        CRLog::trace("launchDictBrowser(): currentLang = %s", UnicodeToUtf8(lang).c_str());
-    }
-    if( lang.empty() ) {
-        lang = lString16("en");
-        CRLog::trace("launchDictBrowser(): default to en");
-    }
-
-    lString16 url = lString16(urlBase);
-    url.replace(lString16("[LANG]"), lang);
-    launchBrowser( url + _word );
-}
-
 void CRPbDictionaryView::closeDictionary()
 {
     _active = false;
@@ -3412,12 +3393,6 @@ bool CRPbDictionaryView::onItemSelect()
         return true;
     case PB_DICT_SEARCH:
         searchDictionary();
-        return true;
-    case PB_DICT_GOOGLE:
-        launchDictBrowser(PB_BROWSER_QUERY_GOOGLE);
-        return true;
-    case PB_DICT_WIKIPEDIA:
-        launchDictBrowser(PB_BROWSER_QUERY_WIKIPEDIA);
         return true;
     }
     return false;
@@ -3546,8 +3521,6 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
             CRLog::trace("CRDV::onTouchEvent() PB_DICT_GOOGLE tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
             if ( tmpRc.isPointInside( pn ) )
             {
-                CRLog::trace("onTouchEvent() PB_DICT_GOOGLE %d", PB_DICT_GOOGLE );
-                setCurItem( PB_DICT_GOOGLE );
                 onItemSelect();
                 Update();
                 return true;
@@ -3558,8 +3531,6 @@ bool CRPbDictionaryView::onTouchEvent( int x, int y, CRGUITouchEventType evType 
             CRLog::trace("CRDV::onTouchEvent() PB_DICT_WIKIPEDIA tmpRc ( %d, %d, %d, %d )", tmpRc.left, tmpRc.top, tmpRc.right, tmpRc.bottom );
             if ( tmpRc.isPointInside( pn ) )
             {
-                CRLog::trace("onTouchEvent() PB_DICT_WIKIPEDIA %d", PB_DICT_WIKIPEDIA );
-                setCurItem( PB_DICT_WIKIPEDIA );
                 onItemSelect();
                 Update();
                 return true;
@@ -6029,7 +6000,7 @@ int main(int argc, char **argv)
     forcePartialBwUpdates = false;
     forcePartialUpdates = false;
     forceFullUpdates = false;
-    useDeveloperFeatures = access( PB_DEV_MARKER, F_OK ) != -1;
+    useDeveloperFeatures = 1; //access( PB_DEV_MARKER, F_OK ) != -1;
     last_drawTemporaryZoom = std::clock();
     int foo;
     sscanf(GetSoftwareVersion(), "%*[^0-9]%u.%u.%u.%*u", &foo, &fw_major, &fw_minor);

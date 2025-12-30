@@ -22,6 +22,7 @@ class CRLinksDialog : public CRGUIWindowBase
         int _cursorPos;
         CRViewDialog * _docwin;
         LVDocView * _docview;
+		CRToolBar *_toolBar;
         lvRect _invalidateRect;
         int _linkCount;
         int _backSize;
@@ -30,7 +31,6 @@ class CRLinksDialog : public CRGUIWindowBase
         int _forwardIndex;
         bool activate(bool backPreffered);
         int _curPage;
-        CRToolBar *_toolBar;
         bool _onTop;
     protected:
         virtual void Update();
