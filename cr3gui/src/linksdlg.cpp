@@ -138,6 +138,7 @@ bool CRLinksDialog::onCommand( int command, int params )
 {
     CRLog::trace("CRLinksDialog::onCommand( %d, %d )", command, params);
     bool needUpdate = false;
+	ldomXRangeList links;
     switch ( command ) {
     case MCMD_CANCEL:
         _docview->clearSelection();
@@ -161,27 +162,15 @@ bool CRLinksDialog::onCommand( int command, int params )
         _docview->goForward();
         _wm->closeWindow( this );
         return true;
-	case DCMD_PAGEDOWN:				// PREVIOUS PAGE
-		needUpdate = _docview->moveByPage(+1);
-		needUpdate |= (_docview->selectLastPageLink()!=NULL);
-		break;
+    case MCMD_SCROLL_FORWARD:
     case DCMD_LINK_NEXT:
-    case MCMD_SCROLL_FORWARD:		// RIGHT
-    case MCMD_SELECT_0:
-		needUpdate = _docview->selectNextPageLink( false );
-		if (!needUpdate && _linkCount>1)
-			needUpdate = _docview->selectFirstPageLink();
+    case MCMD_SELECT_0:				// RIGHT
+		needUpdate = _docview->selectNextPageLink( true );
         break;
-	case DCMD_PAGEUP:				// NEXT PAGE
-		needUpdate = _docview->moveByPage(-1);
-		needUpdate |= (_docview->selectLastPageLink()!=NULL);
-		break;
-    case MCMD_SCROLL_BACK:
+	case MCMD_SCROLL_BACK:
     case DCMD_LINK_PREV:			// LEFT
     case MCMD_SELECT_9:
-		needUpdate = _docview->selectPrevPageLink( false );
-		if (!needUpdate && _linkCount>1) // first link on page and not the only one
-			needUpdate = _docview->selectLastPageLink();
+		needUpdate = _docview->selectPrevPageLink( true );
         break;
     case DCMD_LINK_GO:
     case MCMD_SELECT:
@@ -200,17 +189,6 @@ bool CRLinksDialog::onCommand( int command, int params )
         return selectLink(0);
     case DCMD_LINK_LAST:
         return selectLink( _linkCount-1 );
-    case MCMD_SWAP:
-        {
-            //swap toolbar position
-            CRWindowSkinRef windowSkin = getSkin();
-            _onTop = !_onTop;
-            if (_onTop)
-                _toolBar->setSkin(windowSkin->getToolBar1Skin());
-            else
-                _toolBar->setSkin(windowSkin->getToolBar2Skin());
-        }
-        break;
     default:
         return true;
     }
