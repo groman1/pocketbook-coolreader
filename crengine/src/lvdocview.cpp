@@ -2796,9 +2796,19 @@ ldomXRange * LVDocView::selectFirstPageLink() {
 	getCurrentPageLinks(list);
 	if (!list.length())
 		return NULL;
-	//
 	selectRange(*list[0]);
-	//
+	ldomXRangeList & sel = getDocument()->getSelections();
+	updateSelections();
+	return sel[0];
+}
+
+/// selects last link on page, if any. returns selected link range, null if no links.
+ldomXRange * LVDocView::selectLastPageLink() {
+	ldomXRangeList list;
+	getCurrentPageLinks(list);
+	if (!list.length())
+		return NULL;
+	selectRange(*list[list.length()-1]);
 	ldomXRangeList & sel = getDocument()->getSelections();
 	updateSelections();
 	return sel[0];

@@ -559,6 +559,8 @@ public:
     virtual void getCurrentPageLinks( ldomXRangeList & list );
     /// selects first link on page, if any. returns selected link range, null if no links.
     virtual ldomXRange * selectFirstPageLink();
+    /// selects last link on page, if any. returns selected link range, null if no links.
+	virtual ldomXRange * selectLastPageLink();
     /// selects next link on page, if any. returns selected link range, null if no links.
     virtual ldomXRange * selectNextPageLink( bool wrapAround);
     /// selects previous link on page, if any. returns selected link range, null if no links.

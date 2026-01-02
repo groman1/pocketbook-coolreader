@@ -146,6 +146,7 @@ if [ "$1" = "" -o "$1" = "pro4" ]; then
         -D BACKGROUND_CACHE_FILE_CREATION=1 \
         -D POCKETBOOK_PRO=1 \
         -D CR3_JPEG=1 \
+		-D CMAKE_POLICY_VERSION_MINIMUM=3.5 \
         ..
     make
 

@@ -124,6 +124,8 @@ CRLinksDialog::CRLinksDialog( CRGUIWindowManager * wm, CRViewDialog * docwin, bo
             _toolBar->setEnabled(_toolBar->findButton(MCMD_SWAP, 0), false);
         }
     }*/
+	_forwardIndex = -1;
+	_backIndex = -1;
 	_toolBar = NULL;
     _curPage = -1;
     _fullscreen = true;
@@ -142,63 +144,44 @@ bool CRLinksDialog::onCommand( int command, int params )
         _wm->closeWindow( this );
         return true;
     case MCMD_OK:
-        if ( NULL != _toolBar && _toolBar->isActive() ) {
-            CRToolButton * button = _toolBar->getCurrentButton();
-            if (NULL != button && button->isEnabled())
-                _wm->postCommand( button->getCommand(), button->getParam());
-            return false;
-        } else if ( _docview->goSelectedLink() ) {
+        if ( _docview->goSelectedLink() ) {
 			_docview->clearSelection();
-            //activate( true );
 			_wm->closeWindow( this );
         }
         return true;
     case DCMD_LINK_BACK:
-		_docview->clearSelection();
-        _docview->goBack();
-        _wm->closeWindow( this );
-        break;
     case MCMD_LONG_BACK:
         _docview->clearSelection();
         _docview->goBack();
         _wm->closeWindow( this );
         return true;
     case DCMD_LINK_FORWARD:
-        if (_docview->goForward())
-            activate(false);
-        break;
     case MCMD_LONG_FORWARD:
         _docview->clearSelection();
         _docview->goForward();
         _wm->closeWindow( this );
         return true;
+	case DCMD_PAGEDOWN:				// PREVIOUS PAGE
+		needUpdate = _docview->moveByPage(+1);
+		needUpdate |= (_docview->selectLastPageLink()!=NULL);
+		break;
     case DCMD_LINK_NEXT:
-    case MCMD_SCROLL_FORWARD:
+    case MCMD_SCROLL_FORWARD:		// RIGHT
     case MCMD_SELECT_0:
-        if ( NULL != _toolBar && _toolBar->isActive() ) {
-            if ( !( needUpdate=_toolBar->selectNextButton( _linkCount==0 ))) {
-                if ( _docview->selectNextPageLink( true ) ) {
-                    needUpdate = true;
-                    _toolBar->setActive(false);
-                }
-            }
-        } else if ( !( needUpdate=_docview->selectNextPageLink( false )) ) {
-            needUpdate = _toolBar->selectFirstButton();
-        }
+		needUpdate = _docview->selectNextPageLink( false );
+		if (!needUpdate && _linkCount>1)
+			needUpdate = _docview->selectFirstPageLink();
         break;
-    case DCMD_LINK_PREV:
+	case DCMD_PAGEUP:				// NEXT PAGE
+		needUpdate = _docview->moveByPage(-1);
+		needUpdate |= (_docview->selectLastPageLink()!=NULL);
+		break;
     case MCMD_SCROLL_BACK:
+    case DCMD_LINK_PREV:			// LEFT
     case MCMD_SELECT_9:
-        if ( NULL != _toolBar && _toolBar->isActive() ) {
-            if ( !( needUpdate=_toolBar->selectPrevButton( _linkCount==0 ) ) ) {
-                if ( _docview->selectPrevPageLink( true ) ) {
-                    needUpdate = true;
-                    _toolBar->setActive(false);
-                }
-            }
-        } else if ( !( needUpdate=_docview->selectPrevPageLink( false ) )) {
-            needUpdate = _toolBar->selectLastButton();
-        }
+		needUpdate = _docview->selectPrevPageLink( false );
+		if (!needUpdate && _linkCount>1) // first link on page and not the only one
+			needUpdate = _docview->selectLastPageLink();
         break;
     case DCMD_LINK_GO:
     case MCMD_SELECT:
