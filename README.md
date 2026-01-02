@@ -38,5 +38,4 @@ It features some fixes (feature removals) of the original port:
 ```bash
 bash make.sh pro4
 ```
-- The executable will be located at cr3gui/cr3-pb.app , put it into applications and system/share/cr3/bin folders on your Pocketbook
-- All other files will be located at data/common/ , copy the system folder into the root directory of your Pocketbook
+- Copy the contents of **releases** folder to the root directory of your Pocketbook

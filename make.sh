@@ -160,8 +160,7 @@ if [ "$1" = "" -o "$1" = "pro4" ]; then
     fi
     echo 'Done'
 
-    bash updateReleases.sh pro4
-
+    bash updateReleases.sh
 fi
 
 if [ "$1" = "" -o "$1" = "pro5" ]; then
